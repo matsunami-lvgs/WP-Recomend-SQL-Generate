@@ -22,7 +22,7 @@ class MakeSql
         $sql = "BEGIN;\n";
         foreach ($csv as $post_id => $recomend_posts) {
             $parced = $paece->parse_array($recomend_posts);
-            $kobetu = <<<EOM
+            $insert_or_update = <<<EOM
             INSERT INTO
                 $table ($column)
             VALUES 
@@ -47,7 +47,7 @@ class MakeSql
                 meta_key = '$under_article_recomended'
                 AND post_id = '$post_id';\n\n
             EOM;
-            $sql .= $kobetu;
+            $sql .= $insert_or_update;
         }
         $sql .= "COMMIT;\n";
         return $sql;
