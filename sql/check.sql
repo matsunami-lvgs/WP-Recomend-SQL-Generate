@@ -9,7 +9,7 @@ where
 group by
     meta_value;
 
--- meta_keyが'_article_recommend'の場合、post_idを指定すれば記事を特定できるか、事実上の複合ユニークとして使えるか確認
+-- meta_keyが'_article_recommend'の場合、post_idを指定すればwp_postmeta.idを特定できるか、事実上の複合ユニークとして使えるか確認
 select
     count(*) as count,
     post_id
@@ -22,7 +22,7 @@ group by
 order by count desc;
 
 
---'_article_recommend'がmeta_keyと post_idで特定できるか、事実上の複合ユニークとして使えるか確認
+--meta_keyが'_article_recommend'の場合post_idを指定すればwp_postmeta.idを特定できるか、事実上の複合ユニークとして使えるか確認
 select
     count(*) as count,
     post_id
