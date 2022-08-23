@@ -22,7 +22,19 @@ class MakeSql
         $sql = "BEGIN;\n";
         foreach ($csv as $post_id => $recomend_posts) {
             $parced = $paece->parse_array($recomend_posts);
-            $insert_or_update = <<<EOM
+            $delete_and_insert = <<<EOM
+            DELETE FROM 
+                $table
+            WHERE
+                meta_key = '$article_recomended'
+                AND post_id = '$post_id';
+
+            DELETE FROM 
+                $table
+            WHERE
+                meta_key = '$under_article_recomended'
+                AND post_id = '$post_id';
+
             INSERT INTO
                 $table ($column)
             VALUES 
@@ -30,10 +42,7 @@ class MakeSql
                     '$parced',
                     '$post_id',
                     '$article_recomended'
-                ) ON DUPLICATE KEY
-            UPDATE
-                meta_key = '$article_recomended'
-                AND post_id = '$post_id';
+                );
 
             INSERT INTO
                 $table ($column)
@@ -42,12 +51,9 @@ class MakeSql
                     '$under_article_recomended_meta_value',
                     '$post_id',
                     '$under_article_recomended'
-                ) ON DUPLICATE KEY
-            UPDATE
-                meta_key = '$under_article_recomended'
-                AND post_id = '$post_id';\n\n
+                );\n\n
             EOM;
-            $sql .= $insert_or_update;
+            $sql .= $delete_and_insert;
         }
         $sql .= "COMMIT;\n";
         return $sql;
